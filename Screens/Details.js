@@ -10,13 +10,14 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Iconn from "react-native-vector-icons/Entypo";
-import FavoriteModal from "../Components/popupModal";
+import FavoriteModal from "../Components/ErrorPopup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MovieContext } from "../store/context/Movie-context";
+import ConfirmPopUp from "../Components/ConfirmPopup";
 
 function Details({ route }) {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [modalVisibleDelete, setModalVisibleDelete] = useState(false); 
+  const [modalDeleteMessage, setModalDeleteMessage] = useState("");
   const [isFavourite, setIsFavourite] = useState(false);
   const { deleteMovie } = useContext(MovieContext);
 
@@ -57,18 +58,17 @@ function Details({ route }) {
     navigation.goBack();
   };
 
-  function closeModal() {
-    setModalVisible(false);
-  }
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const toggleModalDelete = () => {
+    setModalDeleteMessage("Meyaked ?");
+    setModalVisibleDelete(!modalVisibleDelete);
+  };
+  const closeDeleteModal = () => {
+    setModalVisibleDelete(false);
   };
 
   const ChangeFavoriteHandler = async () => {
     if (isFavourite) {
       setIsFavourite(false);
-      setModalMessage("Movie removed from favorites");
       try {
         const favouritList = await AsyncStorage.getItem("FavoriteMovies");
         const favouritListParsed = JSON.parse(favouritList);
@@ -91,10 +91,8 @@ function Details({ route }) {
       } catch (error) {
         console.log("Error storing favorite movies:", error);
       }
-      setModalMessage("Movie added to favorites");
     }
 
-    toggleModal();
   };
 
   const handleDelete = async () => {
@@ -150,12 +148,7 @@ function Details({ route }) {
             />
           </TouchableOpacity>
 
-          <FavoriteModal
-            isVisible={isModalVisible}
-            message={modalMessage}
-            onClose={toggleModal}
-            close={closeModal}
-          />
+        
         </View>
         <View style={styles.detailContainer}>
           <ScrollView>
@@ -189,12 +182,19 @@ function Details({ route }) {
               <Text style={styles.description}>{description}</Text>
             </View>
             <View style={styles.deleteMovie}>
-              <TouchableOpacity onPress={handleDelete}>
-                <Iconn name="trash" size={40} color="#E04E1B"  style={{margin: 100}}/>
+              <TouchableOpacity onPress={toggleModalDelete}>
+                <Iconn name="trash" size={40} color="#E04E1B"  />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleEdit}>
                 <Icon name="edit" size={40} color="#E04E1B" />
               </TouchableOpacity>
+              <ConfirmPopUp 
+                isVisible={modalVisibleDelete}
+                message={modalDeleteMessage}
+                onClose={closeDeleteModal}
+                onConfirm={handleDelete}
+                close={closeDeleteModal}
+              />
             </View>
           </ScrollView>
         </View>
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(128, 128, 128, 0.5)",
     height: 30,
     marginRight: 10,
-    width: 90, // Adjust the width as needed
+    width: 90, 
   },
 
   other: {
@@ -267,15 +267,9 @@ const styles = StyleSheet.create({
 
   arrowBack: {
     flex: 1,
-    // position: "absolute",
-    // top: 40,
-    // left: 20,
   },
   favorite: {
     flex: 1/6,
-    // position: "absolute",
-    // top: 70,
-    // left: 340,
   },
   deleteMovie: {
     flex: 1,
@@ -283,6 +277,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     textAlign: "center",
     alignItems: "center",
+    justifyContent: "space-between",
+
     
   }
 });

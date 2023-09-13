@@ -16,6 +16,7 @@ import uuid from "react-native-uuid";
 import Input from "./Input";
 import { MovieContext } from "../../store/context/Movie-context";
 import { useNavigation } from "@react-navigation/native";
+import ErrorPopup from "../ErrorPopup";
 
 const languages = [
   { label: "English", value: "en" },
@@ -33,21 +34,23 @@ const languages = [
 ];
 
 function MovieForm() {
-  const [releaseDate, setReleaseDate] = useState(new Date()); 
-  const [showDatePicker, setShowDatePicker] = useState(false); 
+  const [releaseDate, setReleaseDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
- // Validation state variables for each input
- const [isTitleValid, setTitleValid] = useState(true);
- const [isDescriptionValid, setDescriptionValid] = useState(true);
- const [isVoteAverageValid, setVoteAverageValid] = useState(true);
- const [isVoteCountValid, setVoteCountValid] = useState(true);
- const [isRunTimeValid, setRunTimeValid] = useState(true);
+  // Validation state variables for each input
+  const [isTitleValid, setTitleValid] = useState(true);
+  const [isDescriptionValid, setDescriptionValid] = useState(true);
+  const [isVoteAverageValid, setVoteAverageValid] = useState(true);
+  const [isVoteCountValid, setVoteCountValid] = useState(true);
+  const [isRunTimeValid, setRunTimeValid] = useState(true);
 
- 
+  const [ErrorModal, setErrorModal] = useState(false);
+  const [ErrorMessage, setErrorMessage] = useState("");
+
   const toggleDatePicker = () => {
     setShowDatePicker(!showDatePicker);
     if (!showDatePicker) {
-      setSelectedDate(null); 
+      setSelectedDate(null);
     }
   };
   const formattedReleaseDate = releaseDate.toISOString().split("T")[0]; // Format the date as "YYYY-MM-DD"
@@ -62,27 +65,71 @@ function MovieForm() {
     vote_count: "",
     run_time: "",
     poster_path: null,
-    release_date: formattedReleaseDate, 
+    release_date: formattedReleaseDate,
   });
   const navigation = useNavigation();
-
   const handleAddMovie = async () => {
-     // Validation checks
-    if (
-      inputValues.title.trim() === "" ||
-      inputValues.description.trim() === "" ||
-      isNaN(parseFloat(inputValues.vote_average)) ||
-      isNaN(parseInt(inputValues.vote_count)) ||
-      isNaN(parseInt(inputValues.run_time))
-    ) {
-      // Invalid input, set validation state variables
-      setTitleValid(inputValues.title.trim() !== "");
-      setDescriptionValid(inputValues.description.trim() !== "");
-      setVoteAverageValid(!isNaN(parseFloat(inputValues.vote_average)));
-      setVoteCountValid(!isNaN(parseInt(inputValues.vote_count)));
-      setRunTimeValid(!isNaN(parseInt(inputValues.run_time)));
+    // Validation checks
+    let isValid = true;
+
+    if (inputValues.title.trim() === "") {
+      setTitleValid(false);
+      isValid = false;
+      setErrorMessage("Title cannot be empty");
+    } else {
+      setTitleValid(true);
+    }
+
+    if (inputValues.description.trim() === "") {
+      setDescriptionValid(false);
+      isValid = false;
+      setErrorMessage("Description cannot be empty");
+    } else {
+      setDescriptionValid(true);
+    }
+
+    if (isNaN(parseFloat(inputValues.vote_average)) || inputValues.vote_average < 0 || inputValues.vote_average > 10) {
+      setVoteAverageValid(false);
+      isValid = false;
+      setErrorMessage("Vote must be between 0 and 10");
+
+    } else {
+      setVoteAverageValid(true);
+    }
+
+    if (isNaN(parseInt(inputValues.vote_count))) {
+      setVoteCountValid(false);
+      isValid = false;
+      setErrorMessage("number of reviews must be a number");
+    } else {
+      setVoteCountValid(true);
+    }
+
+    if (isNaN(parseInt(inputValues.run_time))) {
+      setRunTimeValid(false);
+      isValid = false;
+      setErrorMessage("Run time must be a number");
+    } else {
+      setRunTimeValid(true);
+    }
+    if (!inputValues.poster_path) {
+      isValid = false;
+      setErrorMessage("Please pick an image");
+      // toggleModal();
+    }
+
+    const currentDate = new Date();
+    if (selectedDate > currentDate) {
+      isValid = false;
+      setErrorMessage("Release date cannot be in the future");
+      // toggleModal();
+    }
+
+    if (!isValid) {
+      toggleModal();
       return;
     }
+
     const movie = {
       id: uuid.v4(),
       title: inputValues.title,
@@ -94,11 +141,13 @@ function MovieForm() {
       poster_path: inputValues.poster_path,
       release_date: inputValues.release_date,
     };
+
     try {
       addMovie(movie);
     } catch (error) {
       console.log("Error saving movie:", error);
     }
+
     setInputValues({
       title: "",
       description: "",
@@ -109,6 +158,7 @@ function MovieForm() {
       release_date: formattedReleaseDate,
       poster_path: null,
     });
+
     navigation.navigate("Home");
   };
 
@@ -138,16 +188,30 @@ function MovieForm() {
     });
   }
 
+  const closeModal = () => {
+    setErrorModal(false);
+  };
+
+  const toggleModal = () => {
+    setErrorModal(!ErrorModal);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
-        {inputValues.poster_path && (
-          <Image
-            source={{ uri: inputValues.poster_path }}
-            style={styles.imagePreview}
-            value={inputValues.poster_path}
-          />
-        )}
+      {/* {inputValues.poster_path ? (
+          <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
+            <Image
+              source={{ uri: inputValues.poster_path }}
+              style={styles.imagePreview}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
+            <Text style={styles.inputLabel}>Pick an Image</Text>
+            <Icon name="image" size={50} color="#CEB59D" />
+          </TouchableOpacity>
+        )} */}
         <Input
           label="Title"
           textInputConfig={{
@@ -213,6 +277,12 @@ function MovieForm() {
             }}
           />
         </View>
+        <ErrorPopup
+          isVisible={ErrorModal}
+          message={ErrorMessage}
+          onClose={closeModal}
+          close={closeModal}
+        />
 
         <View style={styles.alignment}>
           <Input
@@ -227,20 +297,20 @@ function MovieForm() {
               value: inputValues.run_time,
             }}
           />
-          
-      <TouchableOpacity
-        style={styles.datePickerInput}
-        onPress={() => setShowDatePicker(!showDatePicker)}
-      >
-        <Icon name="calendar" size={20} color="#EE9B37" />
-      </TouchableOpacity>
-      <Input 
-        style={styles.rowInput}
-        label="Release Date"
-        textInputConfig={{
-          value: formattedReleaseDate,
-        }}
-         />
+
+          <TouchableOpacity
+            style={styles.datePickerInput}
+            onPress={() => setShowDatePicker(!showDatePicker)}
+          >
+            <Icon name="calendar" size={20} color="#EE9B37" />
+          </TouchableOpacity>
+          <Input
+            style={styles.rowInput}
+            label="Release Date"
+            textInputConfig={{
+              value: formattedReleaseDate,
+            }}
+          />
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"
@@ -261,10 +331,19 @@ function MovieForm() {
 
         <Text style={styles.inputLabel}>Movie Poster</Text>
 
-        <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
-          <Text style={styles.inputLabel}>Pick an Image</Text>
-          <Icon name="image" size={50} color="#CEB59D" />
-        </TouchableOpacity>
+        {inputValues.poster_path ? (
+          <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
+            <Image
+              source={{ uri: inputValues.poster_path }}
+              style={styles.imagePreview}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton}>
+            <Text style={styles.inputLabel}>Pick an Image</Text>
+            <Icon name="image" size={50} color="#CEB59D" />
+          </TouchableOpacity>
+        )}
         <Button onPress={handleAddMovie} title="Add Movie" color="#EE9B37" />
       </ScrollView>
     </View>
