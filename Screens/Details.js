@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Iconn from "react-native-vector-icons/Entypo";
-import FavoriteModal from "../Components/ErrorPopup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MovieContext } from "../store/context/Movie-context";
 import ConfirmPopUp from "../Components/ConfirmPopup";
@@ -214,7 +213,6 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    // height: "80%",
   },
   detailContainer: {
     flex: 1,

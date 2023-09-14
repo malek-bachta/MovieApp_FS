@@ -32,7 +32,6 @@ export default function App() {
                   presentation: "modal",
                   title: "",
                   headerShown: false,
-                  headerTintColor: "#EE9B37",
 
                   headerStyle: {
                     backgroundColor: "#1F1F1F",
@@ -44,10 +43,9 @@ export default function App() {
                 component={EditMovies}
                 options={{
                   presentation: "modal",
-                  title: "",
-                  // headerShown: false,
+                  title: "Edit Movie",
+                  headerTitleAlign: "center",
                   headerTintColor: "#EE9B37",
-
                   headerStyle: {
                     backgroundColor: "#1F1F1F",
                   },

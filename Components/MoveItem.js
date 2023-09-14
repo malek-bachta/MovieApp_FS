@@ -16,7 +16,6 @@ function MovieItem({ poster, title, onPress, rating, id }) {
 
   return (
     <View style={styles.gridItemContainer}>
-      {/* <View style={styles.gridItem}> */}
       <TouchableOpacity onPress={onPress} style={styles.gridItem}>
         <View style={styles.imageContainer}>
           <Image
@@ -33,7 +32,6 @@ function MovieItem({ poster, title, onPress, rating, id }) {
         </View>
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
-      {/* </View> */}
     </View>
   );
 }
@@ -41,22 +39,12 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   gridItemContainer: {
-    // width: "90%",
     paddingHorizontal: 5,
-    // marginBottom: 20,
-    // marginTop: 20,
-    // height: 280,
     flex: 0.5,
     maxWidth: "50%",
   },
 
-  gridItem: {
-    flex: 1,
-    // width:width /é,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 0,
-  },
+
 
   imageContainer: {
     position: "relative",
@@ -80,7 +68,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    height: 40, // Adjust the height as needed
+    height: 40, 
     overflow: "hidden",
   },
 

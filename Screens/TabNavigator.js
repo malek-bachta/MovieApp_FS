@@ -2,7 +2,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FavoriteS from "./FavoriteS";
 import Home from "./Home";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { View } from "react-native";
 import AddMovies from "./AddMovies";
 
 const Tab = createBottomTabNavigator();
@@ -41,7 +40,7 @@ function MyTabs() {
           headerStyle: {
             backgroundColor: "#1F1F1F",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#EE9B37",
         }}
       />
       <Tab.Screen
@@ -56,7 +55,7 @@ function MyTabs() {
           headerStyle: {
             backgroundColor: "#1F1F1F",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#EE9B37",
         }}
       />
     </Tab.Navigator>

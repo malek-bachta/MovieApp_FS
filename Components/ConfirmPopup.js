@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    width: "80%", // Adjust the width as needed
+    width: "80%", 
     justifyContent: "center",
     alignItems: "center",
   },
@@ -68,9 +68,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "red",
   },
-  // confirmButton: {
-  //   backgroundColor: "red", // Change button color as needed
-  // },
+ 
 });
 
 export default ConfirmPopUp;

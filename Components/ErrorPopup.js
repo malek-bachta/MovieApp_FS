@@ -32,20 +32,20 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 10, // Increased the border radius for a more rounded appearance
+    borderRadius: 10, 
   },
   modalText: {
     fontSize: 18,
     marginBottom: 10,
   },
   closeButton: {
-    marginTop: 20, // Increased the margin top for better spacing
+    marginTop: 20, 
     alignSelf: "flex-end",
   },
   closeButtonText: {
-    fontSize: 16, // Adjust the text size as needed
-    fontWeight: "bold", // Added bold font weight for better visibility
-    color: "blue", // Changed text color to blue, you can customize it further
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "blue",
   },
 });
 
