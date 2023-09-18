@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style="#1F1F1F" />
       <MovieContextProvider>
         <FavoriteContextProvider>
           <NavigationContainer>

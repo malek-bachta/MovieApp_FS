@@ -36,16 +36,16 @@ function MovieForm({ editMode, movieToEdit }) {
   const [releaseDate, setReleaseDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  
+
   const [isTitleValid, setTitleValid] = useState(true);
   const [isDescriptionValid, setDescriptionValid] = useState(true);
   const [isVoteAverageValid, setVoteAverageValid] = useState(true);
   const [isVoteCountValid, setVoteCountValid] = useState(true);
   const [isRunTimeValid, setRunTimeValid] = useState(true);
-  
+
   const [ErrorModal, setErrorModal] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
-  
+
   const toggleDatePicker = () => {
     setShowDatePicker(!showDatePicker);
     if (!showDatePicker) {
@@ -55,8 +55,7 @@ function MovieForm({ editMode, movieToEdit }) {
   const formattedReleaseDate = releaseDate.toISOString().split("T")[0]; // Format the date as "YYYY-MM-DD"
 
   const [selectedLanguage, setSelectedLanguage] = useState(languages[0].value);
-  
-  
+
   const { addMovie, editMovie } = useContext(MovieContext);
   const [inputValues, setInputValues] = useState({
     title: "",
@@ -68,7 +67,6 @@ function MovieForm({ editMode, movieToEdit }) {
     poster_path: null,
     release_date: formattedReleaseDate,
   });
-
 
   const navigation = useNavigation();
 
@@ -91,7 +89,7 @@ function MovieForm({ editMode, movieToEdit }) {
 
   const validateInput = () => {
     let isValid = true;
-  
+
     if (inputValues.title.trim() === "") {
       setTitleValid(false);
       isValid = false;
@@ -99,7 +97,7 @@ function MovieForm({ editMode, movieToEdit }) {
     } else {
       setTitleValid(true);
     }
-  
+
     if (inputValues.description.trim() === "") {
       setDescriptionValid(false);
       isValid = false;
@@ -107,7 +105,7 @@ function MovieForm({ editMode, movieToEdit }) {
     } else {
       setDescriptionValid(true);
     }
-  
+
     if (
       isNaN(parseFloat(inputValues.vote_average)) ||
       inputValues.vote_average < 0 ||
@@ -119,7 +117,7 @@ function MovieForm({ editMode, movieToEdit }) {
     } else {
       setVoteAverageValid(true);
     }
-  
+
     if (isNaN(parseInt(inputValues.vote_count))) {
       setVoteCountValid(false);
       isValid = false;
@@ -127,7 +125,7 @@ function MovieForm({ editMode, movieToEdit }) {
     } else {
       setVoteCountValid(true);
     }
-  
+
     if (isNaN(parseInt(inputValues.run_time))) {
       setRunTimeValid(false);
       isValid = false;
@@ -135,30 +133,29 @@ function MovieForm({ editMode, movieToEdit }) {
     } else {
       setRunTimeValid(true);
     }
-  
+
     if (!inputValues.poster_path) {
       isValid = false;
       setErrorMessage("Please pick an image");
     }
-  
+
     const currentDate = new Date();
     if (selectedDate > currentDate) {
       isValid = false;
       setErrorMessage("Release date cannot be in the future");
     }
-  
+
     return isValid;
   };
-  
-  
+
   const handleAction = async () => {
     const isValid = validateInput();
-  
+
     if (!isValid) {
       toggleModal();
       return;
     }
-  
+
     const movieData = {
       title: inputValues.title,
       description: inputValues.description,
@@ -169,14 +166,13 @@ function MovieForm({ editMode, movieToEdit }) {
       poster_path: inputValues.poster_path,
       release_date: formattedReleaseDate,
     };
-  
+
     if (editMode) {
       const updatedMovie = { ...movieToEdit, ...movieData };
-  
+
       try {
         editMovie(updatedMovie);
         console.log("Editing movie:", updatedMovie);
-
       } catch (error) {
         console.log("Error editing movie:", error);
       }
@@ -185,14 +181,14 @@ function MovieForm({ editMode, movieToEdit }) {
         id: uuid.v4(),
         ...movieData,
       };
-  
+
       try {
         addMovie(newMovie);
       } catch (error) {
         console.log("Error adding movie:", error);
       }
     }
-  
+
     setInputValues({
       title: "",
       description: "",
@@ -203,10 +199,9 @@ function MovieForm({ editMode, movieToEdit }) {
       release_date: formattedReleaseDate,
       poster_path: null,
     });
-  
+
     navigation.navigate("Home");
   };
-  
 
   const pickImage = async () => {
     try {
@@ -243,8 +238,8 @@ function MovieForm({ editMode, movieToEdit }) {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
+    <ScrollView>
+      <View style={styles.container}>
         <Input
           label="Title"
           textInputConfig={{
@@ -354,7 +349,7 @@ function MovieForm({ editMode, movieToEdit }) {
               onChange={(event, selectedDate) => {
                 if (selectedDate) {
                   setReleaseDate(selectedDate);
-                  setSelectedDate(selectedDate); 
+                  setSelectedDate(selectedDate);
                   toggleDatePicker();
                 }
               }}
@@ -390,10 +385,12 @@ function MovieForm({ editMode, movieToEdit }) {
             color="#fff"
             style={styles.addIcon}
           />
-          <Text style={styles.addText}>{editMode ? "Edit Movie" : "Add Movie"}</Text>
+          <Text style={styles.addText}>
+            {editMode ? "Edit Movie" : "Add Movie"}
+          </Text>
         </TouchableOpacity>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -471,7 +468,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignItems: "center",
   },
-   addButton: {
+  addButton: {
     flexDirection: "row",
     backgroundColor: "#EE9B37",
     borderRadius: 5,

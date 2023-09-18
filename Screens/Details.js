@@ -15,7 +15,7 @@ import { MovieContext } from "../store/context/Movie-context";
 import ConfirmPopUp from "../Components/ConfirmPopup";
 
 function Details({ route }) {
-  const [modalVisibleDelete, setModalVisibleDelete] = useState(false); 
+  const [modalVisibleDelete, setModalVisibleDelete] = useState(false);
   const [modalDeleteMessage, setModalDeleteMessage] = useState("");
   const [isFavourite, setIsFavourite] = useState(false);
   const { deleteMovie } = useContext(MovieContext);
@@ -91,7 +91,6 @@ function Details({ route }) {
         console.log("Error storing favorite movies:", error);
       }
     }
-
   };
 
   const handleDelete = async () => {
@@ -114,13 +113,13 @@ function Details({ route }) {
   };
 
   const handleEdit = async () => {
-   try {
+    try {
       navigation.navigate("Edit", {
         item: route.params.item,
       });
     } catch (error) {
       console.log("Error editing movie");
-    } 
+    }
   };
 
   return (
@@ -134,9 +133,9 @@ function Details({ route }) {
         style={styles.backgroundImage}
         resizeMode="stretch"
       >
-        <View style={{ flexDirection: "row", margin: 20, flex: 1 }}>
-          <TouchableOpacity style={styles.arrowBack} onPress={handleGoBack}>
-            <Icon name="long-arrow-left" size={30} color="#EE9B37" />
+        <View style={styles.headerButton}>
+          <TouchableOpacity style={styles.arrowBack}>
+            <Icon name="long-arrow-left" size={30} color="#EE9B37"   onPress={handleGoBack}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.favorite}>
             <Icon
@@ -146,8 +145,6 @@ function Details({ route }) {
               onPress={ChangeFavoriteHandler}
             />
           </TouchableOpacity>
-
-        
         </View>
         <View style={styles.detailContainer}>
           <ScrollView>
@@ -155,7 +152,6 @@ function Details({ route }) {
               <Icon name="star" size={15} color="#CCB802" />
               <Text style={styles.ratingText}>{vote_average}/10</Text>
               <Text style={styles.vote_count}> ( {vote_count} reviews )</Text>
-
             </View>
 
             <Text style={styles.title}>{title} </Text>
@@ -182,12 +178,12 @@ function Details({ route }) {
             </View>
             <View style={styles.deleteMovie}>
               <TouchableOpacity onPress={toggleModalDelete}>
-                <Iconn name="trash" size={40} color="#E04E1B"  />
+                <Iconn name="trash" size={40} color="#E04E1B" />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleEdit}>
                 <Icon name="edit" size={40} color="#E04E1B" />
               </TouchableOpacity>
-              <ConfirmPopUp 
+              <ConfirmPopUp
                 isVisible={modalVisibleDelete}
                 message={modalDeleteMessage}
                 onClose={closeDeleteModal}
@@ -255,7 +251,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(128, 128, 128, 0.5)",
     height: 30,
     marginRight: 10,
-    width: 90, 
+    width: 90,
   },
 
   other: {
@@ -264,10 +260,12 @@ const styles = StyleSheet.create({
   },
 
   arrowBack: {
-    flex: 1,
+    // flex: 1,
+    marginLeft : 20,
   },
   favorite: {
-    flex: 1/6,
+    // flex: 1,
+    marginRight : 20,
   },
   deleteMovie: {
     flex: 1,
@@ -276,7 +274,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "space-between",
-
-    
-  }
+  },
+  headerButton: {
+    flex: 1,
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
