@@ -20,7 +20,6 @@
     "expo": "~49.0.7",
     "expo-blur": "~12.4.1",
     "expo-image-picker": "^14.3.2",
-    "expo-notifications": "~0.20.1",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-native": "0.72.3",
@@ -31,7 +30,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-select-dropdown": "^3.4.0",
     "react-native-uuid": "^2.0.1",
-    "react-native-vector-icons": "^10.0.0"
+    "react-native-vector-icons": "^10.0.0",
+    "expo-notifications": "~0.20.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
