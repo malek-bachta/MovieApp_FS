@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Movie App_N",
-    "slug": "Movie App_N",
+    "slug": "MovieApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bachtata.Movie App_N"
+      "package": "com.bachtata.MovieApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
